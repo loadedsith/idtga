@@ -35,6 +35,9 @@ public class Traps : MonoBehaviour {
 		Linked,
 		Gemmed,
 	};
+		
+	private AudioSource trapSoundSource;
+	public AudioClip trapSound;
 	
 	//traps 
 	//fire, spikes, darts, gas 
@@ -42,6 +45,8 @@ public class Traps : MonoBehaviour {
 	void Start() 
 	{
 		setupSprite();
+		AudioSource[] audioSources = this.GetComponents<AudioSource>();
+		trapSoundSource  = audioSources[0];
 	}
 
 	
@@ -72,9 +77,7 @@ public class Traps : MonoBehaviour {
 		
 	}
 	void swapSpriteUsingIsActive(){
-		
 		int index = (int)(Time.timeSinceLevelLoad * fps) % (spriteTilesX * spriteTilesY);
-		int increment = 0;
 		
 		if(isActive==false){
 				spriteState = AnimStates.on;
@@ -129,8 +132,10 @@ public class Traps : MonoBehaviour {
 			
 			if(doOnce == false)
 			{
+				
 				yield return new WaitForSeconds(1f);
-				doOnce = true; 
+				doOnce = true;
+				
 			}
 			
 			for(int i = 0; i < inTrapList.Count; i++)
@@ -142,11 +147,13 @@ public class Traps : MonoBehaviour {
 					}
 					else if (inTrapList[i].tag == "Player")
 					{
-						if(inTrapList[i].GetComponent<Player>().state != Player.States.Invincible)
+						inTrapList[i].GetComponent<Player>().OnDeath();
+						//replaced by onDeath
+						/*if(inTrapList[i].GetComponent<Player>().state != Player.States.Invincible)
 						{	
 							inTrapList[i].GetComponent<Player>().state = Player.States.Dead;
 							inTrapList[i].GetComponent<Player>().OnDeath();
-						}
+						}*/
 					}
 				}
 				
@@ -192,6 +199,11 @@ public class Traps : MonoBehaviour {
 		{
 			if(isActive == false)
 			{
+				if(trapSoundSource.isPlaying == true)
+					{
+						trapSoundSource.Stop();
+					}
+			trapSoundSource.PlayOneShot(trapSound);
 				isActive = true;
 			}
 		}

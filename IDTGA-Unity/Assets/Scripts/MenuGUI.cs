@@ -70,8 +70,10 @@ public class MenuGUI : MonoBehaviour {
 				"For Player Two:\n" +
 				"Up, Down, Left, and Right arrow keys for movement\n" +
 				"Shift key to interact\n\n" +
-				"Shoot your laser with the Space Bar!\n" +
-				"Don't forget to revive each other by bumping into your ally!");
+				"Shoot your magic beam with the Space Bar!\n" +
+				"Backspace to restart the level\n" +
+				"Don't forget to revive each other " +
+				"by bumping into your ally!\n");
 			if(GUI.Button(new Rect(Screen.width/2-buttonWidth/2, Screen.height/2-buttonHeight/2 + (buttonYPositionOffset * 2), buttonWidth, buttonHeight), "Back"))
 			{
 				menuState = MenuScreens.Main;

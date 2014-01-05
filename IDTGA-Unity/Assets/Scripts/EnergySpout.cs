@@ -28,7 +28,6 @@ public class EnergySpout : MonoBehaviour {
 	private int lastIndex=0;
 	private int iX=2;
 	private int iY=1;
-	private int lastIX=1;
 	
 	
 	// Use this for initialization
@@ -109,11 +108,8 @@ public class EnergySpout : MonoBehaviour {
 			   
 	//	}
     	lastIndex = index;
-		lastIX = iX;
 	}
 	public void placeOrb(){
-		
-		bool placeOrbs = true;
 		if(orbsDespenced+orbsDespencedAtATime <= orbs.Count && unlimitedOrbs == false){
 			orbsDespenced += orbsDespencedAtATime;
 			for(int i = 0; i<orbsDespencedAtATime;i++){
@@ -134,9 +130,6 @@ public class EnergySpout : MonoBehaviour {
 				Instantiate(orb, theOrb.transform.position , transform.rotation);
 				
 			}
-		}
-		else{
-			placeOrbs = false;
 		}
 
 		//TODO finish this placement script

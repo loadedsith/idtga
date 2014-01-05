@@ -107,7 +107,7 @@ public class Switch : MonoBehaviour {
 		swapSpriteUsingIsActive();
         if(delay > 0){
             delay -= (Time.deltaTime * timeScale);
-            Debug.Log("delay :" + delay);
+           // Debug.Log("delay :" + delay);
         }
         if(isActive==true)
 		{
@@ -159,7 +159,6 @@ public class Switch : MonoBehaviour {
 	void swapSpriteUsingIsActive(){
 		
 		int index = (int)(Time.timeSinceLevelLoad * fps) % (spriteTilesX * spriteTilesY);
-		int increment = 0;
 		
 		if(isActive==false){
 				spriteState = AnimStates.on;

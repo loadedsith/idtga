@@ -15,15 +15,18 @@ public class Orb : MonoBehaviour {
 	private int targetFrame = 8;
 	private Vector2 scale;
 	private Renderer myRenderer;
-	private AudioSource orbSoundPlayer;
+	
+	private AudioSource orbSoundSource;
 	public AudioClip orbSound;
+	
 	// Use this for initialization
 	void Start () {
 		setupSprite();
 		float repeatTime =  Random.value*10f;
-		InvokeRepeating("GlitterParticle", 0f,repeatTime);
+		   InvokeRepeating("GlitterParticle", 0f,repeatTime);
 		AudioSource[] audioSources = this.GetComponents<AudioSource>();
-		orbSoundPlayer = audioSources[0];
+		orbSoundSource  = audioSources[0];
+
 	}
 	
 	// Update is called once per frame
@@ -35,13 +38,15 @@ public class Orb : MonoBehaviour {
 		particle.Play();
 	}
 	public int Pickup(){
-		
-			if(orbSoundPlayer.isPlaying == true)
+		if(orbSoundSource.isPlaying == true)
 		{
-			orbSoundPlayer.Stop();
+			orbSoundSource.Stop();
 		}
-		//orbSoundPlayer.PlayOneShot(orbSoundClip);
+		orbSoundSource.PlayOneShot(orbSound);
 		//animatingDeath = true;
+		
+		int returnValue = pointValue;
+		Debug.Log("Orb Return Value: " + returnValue);
 		if(pointValue>=0){
 			pointValue = 0;
 				iY=2;	
@@ -49,7 +54,7 @@ public class Orb : MonoBehaviour {
 		iX=0;
 		}
 		//Debug.Log("pointValue "+pointValue);
-		return pointValue--;
+		return returnValue;
 	}
 	void setupSprite(){
 		

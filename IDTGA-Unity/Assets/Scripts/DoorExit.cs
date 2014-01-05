@@ -9,6 +9,13 @@ public class DoorExit : MonoBehaviour {
 	{
 		exitTrigger = false; 
 	}
+	void OnTriggerEnter(Collider otherObject)
+	{
+		if(otherObject.tag == "Player")
+		{
+			exitTrigger = false;
+		}
+	}
 	void OnTriggerExit(Collider otherObject)
 	{
 		if(otherObject.tag == "Player")

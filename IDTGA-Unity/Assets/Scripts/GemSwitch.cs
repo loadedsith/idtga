@@ -7,7 +7,6 @@ public class GemSwitch : MonoBehaviour {
 	private int lastIndex=0;
 	private int iX=1;
 	private int iY=1;
-	private int lastIY=-1;
 	public int spriteTilesX = 3;
 	public int spriteTilesY = 1;
 	private Vector2 scale;
@@ -72,7 +71,6 @@ public class GemSwitch : MonoBehaviour {
 	void swapSpriteUsingIsActive(){
 		
 		int index = (int)(Time.timeSinceLevelLoad * fps) % (spriteTilesX * spriteTilesY);
-		int increment = 0;
 		
 		if(isActive==false){
 				spriteState = AnimStates.on;

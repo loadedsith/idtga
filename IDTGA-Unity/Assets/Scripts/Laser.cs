@@ -89,8 +89,7 @@ public class Laser : MonoBehaviour {
 		}
 		else
 		{
-			//Recharge energy currently turned off
-			//referenceToCurrentEnergy.currentEnergy += laserRechargeRate;
+			referenceToCurrentEnergy.currentEnergy += laserRechargeRate;
 		}
 	}
 
@@ -181,20 +180,6 @@ public class Laser : MonoBehaviour {
 		laserOne.SetPosition(1, firstObstructionFromPlayerOneToPlayerTwo);
 		laserTwo.SetPosition(0, playerTwoPos);
 		laserTwo.SetPosition(1, firstObstructionFromPlayerTwoToPlayerOne);
-		
-//		For Reference, the below is a system for dynamically adding and subtracting points along the line renderer. It works, but not well enough.
-//		int laserResolution = 5;
-//		float vertexCount = Vector3.Distance(playerOnePos, firstObstructionFromPlayerOneToPlayerTwo)/laserResolution;
-//		vertexCount = Mathf.Clamp(vertexCount, 2, vertexCount);
-//		laserOne.SetVertexCount((int)vertexCount);
-//		Debug.Log("Vertex Count: " + vertexCount);
-//		laserOne.SetPosition(0, playerOnePos);
-//		for(float i = 1; i < vertexCount; i++)
-//		{
-//			laserOne.SetPosition((int)i, Vector3.Lerp(playerOnePos, firstObstructionFromPlayerOneToPlayerTwo, (i+1) * (1/vertexCount)));
-//			Debug.Log("i: " + i);
-//			Debug.Log(i * (1/vertexCount));
-//		}
 		
 		
 

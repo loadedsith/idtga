@@ -21,6 +21,8 @@ public class CameraManager : MonoBehaviour {
 	public float minViewSize;
 	public float maxPanSpeed;
 	public float minPanSpeed;
+	public float minSpecialPanSpeed;
+	public float maxSpecialPanSpeed;
 	private float panSpeed;
 	
 	public bool showingSomething;
@@ -49,6 +51,7 @@ public class CameraManager : MonoBehaviour {
 		if(showingSomething == true)
 		{
 			UpdatePositionsWhileShowingSomething();
+			mainCamera.orthographicSize = Mathf.Lerp(mainCamera.orthographicSize, maxViewSize, Time.deltaTime * 5);
 			if(showingSomethingTimer <= 0)
 			{
 				showingSomething = false;
@@ -114,7 +117,7 @@ public class CameraManager : MonoBehaviour {
 		
 		panSpeed = maxPanSpeed * (1 - percentMaxDistance);
 		
-		panSpeed = Mathf.Clamp(panSpeed, minPanSpeed, maxPanSpeed);
+		panSpeed = Mathf.Clamp(panSpeed, minSpecialPanSpeed, maxSpecialPanSpeed);
 		
 		transform.position = Vector3.MoveTowards(transform.position, positionToMoveTowards, panSpeed);
 	}

@@ -49,7 +49,6 @@ public class Enemy : MonoBehaviour {
 	public EnemyStates state = EnemyStates.Alive;
 	
 	public List<GameObject> pathNodes;
-	private GameObject nextNode;
 	public CharacterController enemyController;
 	private int pathIndex = 0;
 	
@@ -62,7 +61,9 @@ public class Enemy : MonoBehaviour {
 	private int iXDead=1;
 	private int spriteTilesXDeath=8;
 	
-	static public int enemyDeathCount = 0;  
+	static public int enemyDeathCount = 0; 
+	
+	public ParticleSystem poof; 
 	
 	// Use this for initialization
 	void Start ()
@@ -79,15 +80,12 @@ public class Enemy : MonoBehaviour {
 			}
 		}
 		
-		if(isWalkingPath==true){
-			if(pathNodes.Count!=0){
-				//Debug.Log(pathNodes.Count);
-				nextNode = pathNodes[0];
-			}else{
-				//Debug.Log("walking Nodes disabled due to lack of nodes.");
-				isWalkingPath = false;
-			}
+		
+		if(pathNodes.Count==0){
+			//Debug.Log("walking Nodes disabled due to lack of nodes.");
+			isWalkingPath = false;
 		}
+	
     	setupSprite();
 		
 	}
@@ -193,35 +191,38 @@ public class Enemy : MonoBehaviour {
 	}
 	void moveToNextPath(){
 		//Debug.Log("path index: "+pathIndex+"walking path");
+		if(pathNodes.Count != 0){
 		if(pathIndex >= pathNodes.Count){
 			pathIndex = 0;
 			//Debug.Log("reset path index");
 		}
-		if(Vector3.Distance(transform.position, pathNodes[pathIndex].transform.position) < .1)
-		{
-			if(pathDelay > 0){
-	            pathDelay -= (Time.deltaTime * pathTimeScale);
-				heading = Quaternion.LookRotation( Vector3.Normalize(pathNodes[ (pathIndex+1) % pathNodes.Count ].transform.position - transform.position),Vector3.up);
+		
+			if(Vector3.Distance(transform.position, pathNodes[pathIndex].transform.position) < .1)
+			{
+				if(pathDelay > 0){
+		            pathDelay -= (Time.deltaTime * pathTimeScale);
+					heading = Quaternion.LookRotation( Vector3.Normalize(pathNodes[ (pathIndex+1) % pathNodes.Count ].transform.position - transform.position),Vector3.up);
+					headingAngle = Mathf.LerpAngle( transform.eulerAngles.y, heading.eulerAngles.y - 90, 1 );
+		           // Debug.Log("pathDelay :" + pathDelay);
+		      	  }else{
+					pathDelay = 0;
+					pathIndex++;
+				}
+			}else{
+				
+				//move toward the next point
+				//Debug.Log("transform.position: "+transform.position+"pathNodes[pathIndex].transform.position"+pathNodes[pathIndex].transform.position);
+				resetDelay();
+				
+				//speed is not needed in the following rotation, because its rotating the game object, not the sprite, 
+				//but the rotation is important because the sprites use it to know which way to face.
+				heading = Quaternion.LookRotation( Vector3.Normalize(pathNodes[pathIndex].transform.position - transform.position),Vector3.up);
 				headingAngle = Mathf.LerpAngle( transform.eulerAngles.y, heading.eulerAngles.y - 90, 1 );
-	           // Debug.Log("pathDelay :" + pathDelay);
-	      	  }else{
-				pathDelay = 0;
-				pathIndex++;
+	
+				transform.position =  Vector3.MoveTowards(transform.position, pathNodes[pathIndex].transform.position, speed);
+				//Debug.Log("heading angle :" + headingAngle);
+				
 			}
-		}else{
-			
-			//move toward the next point
-			//Debug.Log("transform.position: "+transform.position+"pathNodes[pathIndex].transform.position"+pathNodes[pathIndex].transform.position);
-			resetDelay();
-			
-			//speed is not needed in the following rotation, because its rotating the game object, not the sprite, 
-			//but the rotation is important because the sprites use it to know which way to face.
-			heading = Quaternion.LookRotation( Vector3.Normalize(pathNodes[pathIndex].transform.position - transform.position),Vector3.up);
-			headingAngle = Mathf.LerpAngle( transform.eulerAngles.y, heading.eulerAngles.y - 90, 1 );
-
-			transform.position =  Vector3.MoveTowards(transform.position, pathNodes[pathIndex].transform.position, speed);
-			//Debug.Log("heading angle :" + headingAngle);
-			
 		}
 	}
 	void checkForOtherEnemyDeaths(){
@@ -292,6 +293,8 @@ public class Enemy : MonoBehaviour {
 				//Death animation plays
 				
 				alive = false;
+				
+				Instantiate(poof, gameObject.transform.position, poof.transform.rotation);
 				Destroy(this.gameObject);
 				enemyDeathCount++;
 				Debug.Log("Enemy Death Count NORMAL: " + enemyDeathCount);
@@ -318,6 +321,7 @@ public class Enemy : MonoBehaviour {
 				alive = false;
 				this.renderer.enabled = false;
 				
+				Instantiate(poof, gameObject.transform.position, poof.transform.rotation);
 				Destroy(this.gameObject);
 				
 				
@@ -340,6 +344,7 @@ public class Enemy : MonoBehaviour {
 	{
 		foreach(GameObject g in attachedEnemies)
 		{
+			Instantiate(poof, gameObject.transform.position, poof.transform.rotation);
 			Destroy(g);
 			enemyDeathCount++;
 			Debug.Log("Enemy Death Count LINKED: " + enemyDeathCount);

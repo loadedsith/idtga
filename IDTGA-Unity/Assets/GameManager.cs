@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if(gameOver){
-			Debug.Log("Game Over!");
+				StartCoroutine("GameOver");
 			}
 		int deadCount=0;
 		foreach(Player aPlayer in players){
@@ -109,6 +109,11 @@ public class GameManager : MonoBehaviour {
 		{
 			Application.LoadLevel(Application.loadedLevel + 1); 
 		}
+	}
+	IEnumerator GameOver()
+	{
+		yield return new WaitForSeconds(2f);
+		Application.LoadLevel(Application.loadedLevelName);
 	}
 	
 }

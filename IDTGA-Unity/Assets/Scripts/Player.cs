@@ -25,12 +25,11 @@ public class Player : MonoBehaviour {
 	CharacterController ourController;
 
 	private Quaternion heading;
-	private float headingAngle = 90;
+	private float headingAngle = 270;
 	
 	public float fps;
 	private int lastIndex=0;
-	private int iX=2;	
-	private int iXDead=1;
+	private int iX=1;
 	public int spriteTilesXDeath=8;
 	
 	private int iY=1;
@@ -56,7 +55,6 @@ public class Player : MonoBehaviour {
 	public bool showContextSprite = true;
 	private int contextLastIndex=0;
 	private int contextIX=1;
-	private int contextLastIX=1;
 	private int contextIY=1;
 	public int contextSpriteTilesX = 3;
 	public int contextSpriteTilesY = 1;
@@ -104,6 +102,10 @@ public class Player : MonoBehaviour {
 				myRenderer.material.color = col;
 			}
 		}
+		if(state != States.Dead){
+			
+			movePlayer(inputHorizontal,inputVertical);
+		}
 	}
 	
 	// Update is called once per frame
@@ -112,7 +114,7 @@ public class Player : MonoBehaviour {
 		if(state != States.Dead)
 		{	
 			updatePlayerHeading();
-			movePlayer(inputHorizontal,inputVertical);
+			
 			EmitWalkingAudio();
 			displayContextSprite();
 		}
@@ -162,7 +164,6 @@ public class Player : MonoBehaviour {
 	void revive(){
 		iY=3;
 		iX=1;
-		iXDead = 1;
 		state = States.Invincible;
 		if(onReviveAudioSource.isPlaying == true)
 		{
@@ -170,9 +171,8 @@ public class Player : MonoBehaviour {
 		}
 		onReviveAudioSource.PlayOneShot(onReviveAudio);
 		//animatingDeath = true;
-		
 		//invincibilityCountDown = invicibilityTime;
-		playersDead --;
+		playersDead--;
 		playerCollider.enabled = false;
 		swapSpriteUsingHeading();
 		Debug.Log("Player "+playerId+": Is alive again!");
@@ -240,9 +240,10 @@ public class Player : MonoBehaviour {
  
         if(myRenderer == null) enabled = false;
  
+		Vector2 offset = new Vector2(iX* scale.x,
+                                         1-(scale.y*iY));
         myRenderer.material.mainTextureScale =  scale;
-		Vector2 offset = new Vector2(1* scale.x,
-                                         1-(scale.y*1));
+        myRenderer.material.mainTextureOffset =  offset;
 			
         
 	}
@@ -255,10 +256,12 @@ public class Player : MonoBehaviour {
 		contextRenderer = aTransform.GetComponentInChildren<Renderer>();
  
         if(contextRenderer == null) enabled = false;
- 
+		
+ 		Vector2 contextOffset = new Vector2(iX* contextScale.x,
+                                         1-(contextScale.y*iY));
         contextRenderer.material.mainTextureScale =  contextScale;
-		Vector2 contextOffset = new Vector2(1* contextScale.x,
-                                         1-(contextScale.y*1));
+		contextRenderer.material.mainTextureOffset =  contextOffset;
+		
 			
         
 	}
@@ -302,6 +305,11 @@ public class Player : MonoBehaviour {
 			
 		}
 		
+		if(Input.GetKeyDown(KeyCode.Backspace))
+		{
+			Application.LoadLevel(Application.loadedLevelName); 
+		}
+		
 	}
 	
 	void OnTriggerEnter(Collider inputCollider){
@@ -309,8 +317,9 @@ public class Player : MonoBehaviour {
 		{
 			if(inputCollider.tag == "Orb")
 			{	
-				orbCount+= inputCollider.gameObject.GetComponent<Orb>().Pickup();
-				inGameGUIReference.IncreaseEnergy(inputCollider.gameObject.GetComponent<Orb>().Pickup());
+				int increase = inputCollider.gameObject.GetComponent<Orb>().Pickup();
+				orbCount+= increase;
+				inGameGUIReference.IncreaseEnergy(increase);
 			}
 		}	
 		
@@ -386,7 +395,6 @@ public class Player : MonoBehaviour {
 			   
 	//	}
     	contextLastIndex = index;
-		contextLastIX = contextIX;
 	}
 	void OnTriggerExit(Collider inputCollider)
 	{
@@ -466,11 +474,13 @@ public class Player : MonoBehaviour {
 			
 			if(playersDead == 2)
 			{
-				//Game over stuff  
+				//StartCoroutine("GameOver");  
 			}
 		}
 		
 	}
+	
+
 		
 	/*void orbCountGUI(){
 			

@@ -5,7 +5,6 @@ public class expressiveLighting : MonoBehaviour {
 	
 	
 	private Light proximityLight;
-	private Light poiLight;
 	private Light playerOneLight;
 	private Light playerTwoLight;
 	public GameObject playerOne;
@@ -36,14 +35,6 @@ public class expressiveLighting : MonoBehaviour {
 			case "ProximityLight":
 					proximityLight = aLight;
 					break;
-				
-			case "POILight":
-					poiLight = aLight;
-					break;
-				
-			default:
-				
-				break;
 				
 				
 			}
@@ -77,8 +68,8 @@ public class expressiveLighting : MonoBehaviour {
 		proximityLight.light.spotAngle = Remap(playerDistance,50f, 0f, 140f, 80f);
 		
 		
-		playerOneLight.intensity = Remap(playerDistance,maxProximityRange, minProximityRange, .8f, 0f);
-		playerTwoLight.intensity = Remap(playerDistance,maxProximityRange, minProximityRange, .8f, 0f);
+		playerOneLight.intensity = Remap(playerDistance,maxProximityRange, minProximityRange, 1f, 0f);
+		playerTwoLight.intensity = Remap(playerDistance,maxProximityRange, minProximityRange, 1f, 0f);
 		playerOneLight.spotAngle = Remap(playerDistance,maxProximityRange, minProximityRange, 40f, 50f);
 		playerTwoLight.spotAngle = Remap(playerDistance,maxProximityRange, minProximityRange, 40f, 50f);
 		//playerOneLight.transform.( playerOne.transform.position);
